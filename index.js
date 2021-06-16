@@ -2,14 +2,19 @@ var rect = require("./rectangle");
 
 function solveRect(l, b) {
   console.log(`Solving for rectangle with l = ${l} and b = ${b}`);
-  if (l <= 0 || b <= 0) {
-    console.log(
-      `Rectangle dimensions should be greather than zero: l = ${l}, and b = ${b}`
-    );
-  } else {
-    console.log(`The area of the rectangle is ${rect.area(l, b)}`);
-    console.log(`The parimeter of the rectangle is ${rect.parimeter(l, b)}`);
-  }
+  rect(l, b, (err, rectangle) => {
+    if (err) {
+      console.log(`ERROR: ${err.message}`);
+    } else {
+      console.log(
+        `The area of the rectangle of dimensions l = ${l}, and b = ${b} is ${rectangle.area()}`
+      );
+      console.log(
+        `The parimeter of the rectangle of dimensions l = ${l}, and b = ${b} is ${rectangle.parimeter()}`
+      );
+    }
+  });
+  console.log("This statement is call after the call to rect()");
 }
 
 solveRect(2, 4);
