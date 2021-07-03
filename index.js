@@ -7,24 +7,40 @@ const url = "mongodb://root:rootpassword@localhost:27017";
 const connect = mongoose.connect(url, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useCreateIndex: true,
 });
 
 connect.then((db) => {
   console.log("Connected correctly to server");
 
-  var newDish = Dishes({
-    name: "Uthapisszza",
+  Dishes.create({
+    name: "Uthapissssasd2",
     description: "test",
-  });
-
-  newDish
-    .save()
+  })
     .then((dish) => {
       console.log(dish);
-      Dishes.find({}).exec();
+      return Dishes.findByIdAndUpdate(
+        dish._id,
+        {
+          $set: { description: "Updated test" },
+        },
+        {
+          new: true,
+        }
+      ).exec();
     })
-    .then((dishes) => {
-      console.log(dishes);
+    .then((dish) => {
+      console.log(dish);
+      dish.comments.push({
+        rating: 5,
+        comment: "testing comment",
+        author: "Leonardo",
+      });
+
+      return dish.save();
+    })
+    .then((dish) => {
+      console.log(dish);
       return Dishes.deleteOne({});
     })
     .then(() => {
