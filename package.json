@@ -1,0 +1,28 @@
+{
+  "name": "server-side-development-nodejs-express-mongodb",
+  "version": "1.0.0",
+  "description": "Online course: Server-side Development with NodeJS, Express and MongoDB",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.16.3",
+    "mongodb": "^3.6.9",
+    "mongoose": "^5.12.14",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GDP-IrvanAriyanto/server-side-development-nodejs-express-mongodb.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GDP-IrvanAriyanto/server-side-development-nodejs-express-mongodb/issues"
+  },
+  "homepage": "https://github.com/GDP-IrvanAriyanto/server-side-development-nodejs-express-mongodb#readme"
+}
