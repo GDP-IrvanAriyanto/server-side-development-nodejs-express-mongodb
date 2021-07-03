@@ -2,8 +2,7 @@ const mongoose = require("mongoose");
 
 const Dishes = require("./models/dishes");
 
-const url =
-  "mongodb://root:rootpassword@localhost:27017/conFusion?authSource=conFusion&w=1')";
+const url = "mongodb://root:rootpassword@localhost:27017";
 
 const connect = mongoose.connect(url, {
   useNewUrlParser: true,
@@ -26,10 +25,10 @@ connect.then((db) => {
     })
     .then((dishes) => {
       console.log(dishes);
-      return Dishes.remove({});
+      return Dishes.deleteOne({});
     })
     .then(() => {
-      return mongoose.connections.close();
+      return mongoose.connections.close;
     })
     .catch((err) => {
       console.log(err);
