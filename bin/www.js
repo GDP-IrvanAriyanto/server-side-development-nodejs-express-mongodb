@@ -36,16 +36,15 @@ var options = {
   key: fs.readFileSync(__dirname + "/private.key"),
   cert: fs.readFileSync(__dirname + "/certificate.pem"),
 };
-console.log(__dirname + "/private.key");
 
-var secureServer = https.createServer(options, app);
+// var secureServer = https.createServer(options, app);
 
-secureServer.listen(app.get("secPort"), () => {
-  console.log("Server listening on port ", app.get("secPort"));
-});
+// secureServer.listen(app.get("secPort"), () => {
+//   console.log("Server listening on port ", app.get("secPort"));
+// });
 
-secureServer.on("error", onError);
-secureServer.on("listening", onListening);
+// secureServer.on("error", onError);
+// secureServer.on("listening", onListening);
 
 /**
  * Normalize a port into a number, string, or false.
