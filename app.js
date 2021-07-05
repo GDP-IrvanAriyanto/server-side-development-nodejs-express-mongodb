@@ -7,7 +7,8 @@ var bodyParser = require("body-parser");
 var session = require("express-session");
 var FileStore = require("session-file-store")(session);
 var passport = require("passport");
-var authenticate = require("./authentication");
+var authenticate = require("./authenticate");
+var config = require("./config");
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
@@ -21,7 +22,7 @@ mongoose.Promise = require("bluebird");
 const Dishes = require("./models/dishes");
 
 // Connection URL
-const url = "mongodb://root:rootpassword@localhost:27017/";
+const url = config.mongoUrl;
 const connect = mongoose.connect(url, {
   // useMongoClient: true,
   /* other options */
@@ -62,25 +63,25 @@ app.use(express.urlencoded({ extended: false }));
 // );
 
 app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.session());
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 
-function auth(req, res, next) {
-  console.log(req.session);
+// function auth(req, res, next) {
+//   console.log(req.session);
 
-  if (!req.user) {
-    var err = new Error("You are not authenticated!");
+//   if (!req.user) {
+//     var err = new Error("You are not authenticated!");
 
-    err.status = 401;
-    return next(err);
-  } else {
-    next();
-  }
-}
+//     err.status = 401;
+//     return next(err);
+//   } else {
+//     next();
+//   }
+// }
 
-app.use(auth);
+// app.use(auth);
 
 app.use(express.static(path.join(__dirname, "public")));
 
