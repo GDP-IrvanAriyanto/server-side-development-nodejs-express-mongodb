@@ -25,7 +25,7 @@ var authenticate = require("./authenticate");
 // Connection URL
 const url = config.mongoUrl;
 const connect = mongoose.connect(url, {
-  useMongoClient: true,
+  // useMongoClient: true,
   /* other options */
 });
 
@@ -39,6 +39,17 @@ connect.then(
 );
 
 var app = express();
+
+app.all("*", (req, res, next) => {
+  if (req.secure) {
+    return next();
+  } else {
+    res.redirect(
+      307,
+      "https://" + req.hostname + ":" + req.get("secPort") + req.url
+    );
+  }
+});
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
