@@ -4,9 +4,11 @@ var favicon = require("serve-favicon");
 var logger = require("morgan");
 var cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
+var session = require("express-session");
+var FileStore = require("session-file-store")(session);
 
-var index = require("./routes/index");
-var users = require("./routes/users");
+var indexRouter = require("./routes/index");
+var usersRouter = require("./routes/users");
 var dishRouter = require("./routes/dishRouter");
 var promoRouter = require("./routes/promoRouter");
 var leaderRouter = require("./routes/leaderRouter");
@@ -43,38 +45,40 @@ app.set("view engine", "pug");
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger("dev"));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+// app.use(cookieParser());
+
+app.use(
+  session({
+    name: "session-id",
+    secret: "1234-33434-23232-34343",
+    saveUninitialized: false,
+    resave: false,
+    store: new FileStore(),
+  })
+);
+
+app.use("/", indexRouter);
+app.use("/users", usersRouter);
 
 function auth(req, res, next) {
-  console.log(req.headers);
+  console.log(req.session);
 
-  var authHeader = req.headers.authorization;
-
-  if (!authHeader) {
+  if (!req.session.user) {
     var err = new Error("You are not authenticated!");
 
-    res.setHeader("WWW-Authenticate", "Basic");
     err.status = 401;
     return next(err);
-  }
-
-  var auth = new Buffer(authHeader.split(" ")[1], "base64")
-    .toString()
-    .split(":");
-
-  var username = auth[0];
-  var password = auth[1];
-
-  if (username === "admin" && password === "password") {
-    next();
   } else {
-    var err = new Error("You are not authenticated!");
+    if (req.session.user === "authenticated") {
+      next();
+    } else {
+      var err = new Error("You are not authenticated!");
 
-    res.setHeader("WWW-Authenticate", "Basic");
-    err.status = 401;
-    return next(err);
+      err.status = 401;
+      return next(err);
+    }
   }
 }
 
@@ -82,8 +86,6 @@ app.use(auth);
 
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/", index);
-app.use("/users", users);
 app.use("/dishes", dishRouter);
 app.use("/promotions", promoRouter);
 app.use("/leaders", leaderRouter);
