@@ -6,28 +6,27 @@ var cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
 var session = require("express-session");
 var FileStore = require("session-file-store")(session);
-var passport = require("passport");
-var authenticate = require("./authenticate");
-var config = require("./config");
 
-var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
+var index = require("./routes/index");
+var users = require("./routes/users");
 var dishRouter = require("./routes/dishRouter");
 var promoRouter = require("./routes/promoRouter");
 var leaderRouter = require("./routes/leaderRouter");
+var config = require("./config");
 
 const mongoose = require("mongoose");
 mongoose.Promise = require("bluebird");
 
 const Dishes = require("./models/dishes");
 
+var passport = require("passport");
+var authenticate = require("./authenticate");
+
 // Connection URL
 const url = config.mongoUrl;
 const connect = mongoose.connect(url, {
-  // useMongoClient: true,
+  useMongoClient: true,
   /* other options */
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
 });
 
 connect.then(
@@ -48,36 +47,35 @@ app.set("view engine", "pug");
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger("dev"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-// app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+//app.use(cookieParser('12345-67890-09876-54321'));
 
-// app.use(
-//   session({
-//     name: "session-id",
-//     secret: "1234-33434-23232-34343",
-//     saveUninitialized: false,
-//     resave: false,
-//     store: new FileStore(),
-//   })
-// );
+// app.use(session({
+//   name: 'session-id',
+//   secret: '12345-67890-09876-54321',
+//   saveUninitialized: false,
+//   resave: false,
+//   store: new FileStore()
+// }));
 
 app.use(passport.initialize());
 // app.use(passport.session());
 
-app.use("/", indexRouter);
-app.use("/users", usersRouter);
+app.use("/", index);
+app.use("/users", users);
 
-// function auth(req, res, next) {
-//   console.log(req.session);
+// function auth (req, res, next) {
+//   console.log(req.user);
 
 //   if (!req.user) {
-//     var err = new Error("You are not authenticated!");
-
+//     var err = new Error('You are not authenticated!');
+//     res.setHeader('WWW-Authenticate', 'Basic');
 //     err.status = 401;
-//     return next(err);
-//   } else {
-//     next();
+//     next(err);
+//   }
+//   else {
+//         next();
 //   }
 // }
 
